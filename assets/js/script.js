@@ -3,6 +3,8 @@ document.getElementById('pendingTasks').addEventListener('click', handleListClic
 document.getElementById('inProgressTasks').addEventListener('click', handleListClick);
 document.getElementById('completedTasks').addEventListener('click', handleListClick);
 
+let tasks = [];
+
 // Cargar las tareas al cargar la página
 loadTasks();
 
@@ -45,8 +47,8 @@ function displayTasks(tasks) {
     listItem.innerHTML = `
       <span>${task.name}</span>
       <div class="task-actions">
-        <button class="btn btn-danger btn-sm delete-btn" data-index="${index}" data-state="${task.state}">Eliminar</button>
         ${getTaskStateButtons(index, task.state)}
+        <button class="btn btn-danger btn-sm delete-btn" data-index="${index}" data-state="${task.state}">Eliminar</button>
       </div>
     `;
 
@@ -71,9 +73,8 @@ function getTaskStateButtons(index, currentState) {
     buttonsHTML += `<button class="btn btn-success btn-sm state-btn" data-index="${index}" data-state="en_ejecucion">En Ejecución</button>`;
   } else if (currentState === 'en_ejecucion') {
     buttonsHTML += `<button class="btn btn-success btn-sm state-btn" data-index="${index}" data-state="finalizada">Finalizar</button>`;
-    buttonsHTML += `<button class="btn btn-secondary btn-sm state-btn" data-index="${index}" data-state="pendiente">Pendiente</button>`;
   } else if (currentState === 'finalizada') {
-    buttonsHTML += `<button class="btn btn-secondary btn-sm state-btn" data-index="${index}" data-state="en_ejecucion">En Ejecución</button>`;
+    buttonsHTML += `<button class="btn btn-secondary btn-sm state-btn" data-index="${index}" data-state="pendiente">Pendiente</button>`;
   }
 
   return buttonsHTML;
@@ -112,7 +113,7 @@ function changeTaskState(index, currentState) {
   } else if (currentState === 'en_ejecucion') {
     newState = 'finalizada';
   } else if (currentState === 'finalizada') {
-    newState = 'en_ejecucion';
+    newState = 'pendiente';
   }
 
   tasks[index].state = newState;
