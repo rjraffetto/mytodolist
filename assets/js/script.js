@@ -141,3 +141,26 @@ function loadTasks() {
   ];
   displayTasks(tasks);
 }
+
+const userAgentData = navigator.userAgentData;
+
+if (userAgentData) {
+  const userAgent = userAgentData.userAgent;
+  const platform = userAgentData.platform;
+
+  // Utiliza userAgent y platform en lugar de navigator.userAgent y navigator.platform
+} else {
+  // Realiza una estrategia alternativa para obtener la información necesaria en navegadores que no admiten userAgentData
+}
+
+
+function loadTasks() {
+  // se puede realizar una solicitud AJAX o cargar las tareas desde el almacenamiento local
+  // Ejemplo con tareas predefinidas:
+  tasks = [
+    { name: 'lo que tengo que hacer', state: 'pendiente' },
+    { name: 'lo que estoy haciendo', state: 'en_ejecucion' },
+    { name: 'lo que ya hice', state: 'finalizada' },
+  ];
+  displayTasks(tasks);
+}
