@@ -1,0 +1,70 @@
+body {
+    background-color: #f9fbe7;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .container {
+    max-width: 600px;
+  }
+  
+  .card {
+    border-radius: 8px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .card-header {
+    background-color: #aed581;
+    color: #ffffff;
+    padding: 10px 20px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .card-title {
+    margin: 0;
+  }
+  
+  .card-body {
+    padding: 20px;
+  }
+  
+  .form-label {
+    font-weight: bold;
+    color: #555555;
+  }
+  
+  .btn-primary {
+    background-color: #64b5f6;
+    border-color: #64b5f6;
+  }
+  
+  .btn-primary:hover {
+    background-color: #42a5f5;
+    border-color: #42a5f5;
+  }
+  
+  .list-group-item {
+    border: none;
+    background-color: #e0e0e0;
+    color: #333333;
+  }
+  
+  .list-group-item:hover {
+    background-color: #cecece;
+  }
+  
+  .alert {
+    border-radius: 8px;
+    padding: 12px;
+  }
+  
+  .alert-success {
+    background-color: #a5d6a7;
+    color: #2e7d32;
+  }
+  
+  .alert-danger {
+    background-color: #ef9a9a;
+    color: #c62828;
+  }
+  
