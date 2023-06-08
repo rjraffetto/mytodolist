@@ -1,5 +1,7 @@
 document.getElementById('taskForm').addEventListener('submit', handleFormSubmit);
-document.getElementById('taskList').addEventListener('click', handleListClick);
+document.getElementById('pendingTasks').addEventListener('click', handleListClick);
+document.getElementById('inProgressTasks').addEventListener('click', handleListClick);
+document.getElementById('completedTasks').addEventListener('click', handleListClick);
 
 // Cargar las tareas al cargar la página
 loadTasks();
@@ -11,7 +13,7 @@ function handleFormSubmit(event) {
   const task = taskInput.value.trim();
 
   if (task !== '') {
-    addTask(task);
+    addTask(task, 'pendiente'); // Agregar estado inicial 'pendiente'
     taskInput.value = '';
   }
 }
@@ -19,60 +21,122 @@ function handleFormSubmit(event) {
 function handleListClick(event) {
   if (event.target.classList.contains('delete-btn')) {
     const index = event.target.dataset.index;
-
-    deleteTask(index);
+    const state = event.target.dataset.state;
+    deleteTask(index, state);
+  } else if (event.target.classList.contains('state-btn')) {
+    const index = event.target.dataset.index;
+    const currentState = event.target.dataset.state;
+    changeTaskState(index, currentState);
   }
 }
 
 function displayTasks(tasks) {
-  const taskList = document.getElementById('taskList');
-  taskList.innerHTML = '';
+  const pendingTasksList = document.getElementById('pendingTasks');
+  const inProgressTasksList = document.getElementById('inProgressTasks');
+  const completedTasksList = document.getElementById('completedTasks');
+
+  pendingTasksList.innerHTML = '';
+  inProgressTasksList.innerHTML = '';
+  completedTasksList.innerHTML = '';
 
   tasks.forEach((task, index) => {
     const listItem = document.createElement('li');
     listItem.className = 'list-group-item';
     listItem.innerHTML = `
-      <span>${task}</span>
-      <button class="btn btn-danger btn-sm float-end delete-btn" data-index="${index}">Eliminar</button>
+      <span>${task.name}</span>
+      <div class="task-actions">
+        <button class="btn btn-danger btn-sm delete-btn" data-index="${index}" data-state="${task.state}">Eliminar</button>
+        ${getTaskStateButtons(index, task.state)}
+      </div>
     `;
-    taskList.appendChild(listItem);
+
+    switch (task.state) {
+      case 'pendiente':
+        pendingTasksList.appendChild(listItem);
+        break;
+      case 'en_ejecucion':
+        inProgressTasksList.appendChild(listItem);
+        break;
+      case 'finalizada':
+        completedTasksList.appendChild(listItem);
+        break;
+    }
+  });
+}
+
+function getTaskStateButtons(index, currentState) {
+  let buttonsHTML = '';
+
+  if (currentState === 'pendiente') {
+    buttonsHTML += `<button class="btn btn-success btn-sm state-btn" data-index="${index}" data-state="en_ejecucion">En Ejecución</button>`;
+  } else if (currentState === 'en_ejecucion') {
+    buttonsHTML += `<button class="btn btn-success btn-sm state-btn" data-index="${index}" data-state="finalizada">Finalizar</button>`;
+    buttonsHTML += `<button class="btn btn-secondary btn-sm state-btn" data-index="${index}" data-state="pendiente">Pendiente</button>`;
+  } else if (currentState === 'finalizada') {
+    buttonsHTML += `<button class="btn btn-secondary btn-sm state-btn" data-index="${index}" data-state="en_ejecucion">En Ejecución</button>`;
+  }
+
+  return buttonsHTML;
+}
+
+function addTask(name, state) {
+  const task = { name, state };
+  tasks.push(task);
+  displayTasks(tasks);
+}
+
+function deleteTask(index, state) {
+  Swal.fire({
+    title: '¿Estás seguro?',
+    text: 'La tarea será eliminada.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#64b5f6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      tasks.splice(index, 1);
+      displayTasks(tasks);
+      showSuccessMessage('Tarea eliminada exitosamente');
+    }
+  });
+}
+
+function changeTaskState(index, currentState) {
+  let newState = '';
+
+  if (currentState === 'pendiente') {
+    newState = 'en_ejecucion';
+  } else if (currentState === 'en_ejecucion') {
+    newState = 'finalizada';
+  } else if (currentState === 'finalizada') {
+    newState = 'en_ejecucion';
+  }
+
+  tasks[index].state = newState;
+  displayTasks(tasks);
+}
+
+function showSuccessMessage(message) {
+  Swal.fire({
+    icon: 'success',
+    text: message,
+    showConfirmButton: false,
+    timer: 2000,
+    position: 'top-end',
+    toast: true,
   });
 }
 
 function loadTasks() {
-  let tasks = [];
-
-  if (localStorage.getItem('tasks')) {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  }
-
-  displayTasks(tasks);
-}
-
-function saveTasks(tasks) {
-  localStorage.setItem('tasks', JSON.stringify(tasks));
-}
-
-function addTask(task) {
-  let tasks = [];
-
-  if (localStorage.getItem('tasks')) {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  }
-
-  tasks.push(task);
-  saveTasks(tasks);
-  displayTasks(tasks);
-}
-
-function deleteTask(index) {
-  let tasks = [];
-
-  if (localStorage.getItem('tasks')) {
-    tasks = JSON.parse(localStorage.getItem('tasks'));
-  }
-
-  tasks.splice(index, 1);
-  saveTasks(tasks);
+  // se puede realizar una solicitud AJAX o cargar las tareas desde el almacenamiento local
+  // Ejemplo con tareas predefinidas:
+  tasks = [
+    { name: 'lo que tengo que hacer', state: 'pendiente' },
+    { name: 'lo que estoy haciendo', state: 'en_ejecucion' },
+    { name: 'lo que ya hice', state: 'finalizada' },
+  ];
   displayTasks(tasks);
 }
