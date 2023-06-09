@@ -21,6 +21,7 @@ function handleFormSubmit(event) {
 }
 
 function handleListClick(event) {
+  debugger
   if (event.target.classList.contains('delete-btn')) {
     const index = event.target.dataset.index;
     const state = event.target.dataset.state;
@@ -105,20 +106,12 @@ function deleteTask(index, state) {
   });
 }
 
-function changeTaskState(index, currentState) {
-  let newState = '';
+function changeTaskState(index, nextState) {
 
-  if (currentState === 'pendiente') {
-    newState = 'en_ejecucion';
-  } else if (currentState === 'en_ejecucion') {
-    newState = 'finalizada';
-  } else if (currentState === 'finalizada') {
-    newState = 'pendiente';
-  }
-
-  tasks[index].state = newState;
+  tasks[index].state = nextState;
   displayTasks(tasks);
 }
+
 
 function showSuccessMessage(message) {
   Swal.fire({
@@ -132,8 +125,7 @@ function showSuccessMessage(message) {
 }
 
 function loadTasks() {
-  // se puede realizar una solicitud AJAX o cargar las tareas desde el almacenamiento local
-  // Ejemplo con tareas predefinidas:
+  // Aca un ejemplo con tareas predefinidas:
   tasks = [
     { name: 'lo que tengo que hacer', state: 'pendiente' },
     { name: 'lo que estoy haciendo', state: 'en_ejecucion' },
