@@ -76,3 +76,42 @@ body {
   background-color: #ef9a9a;
   color: #c62828;
 }
+
+/* Estilos para dispositivos móviles */
+@media only screen and (max-width: 456px) {
+  .container {
+    max-width: 100%;
+    padding: 10px;
+  }
+
+  .card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .card-header,
+  .card-body {
+    padding: 10px;
+  }
+
+  .task-list-container {
+    flex-direction: column;
+  }
+
+  .task-column {
+    margin-bottom: 20px;
+  }
+}
+
+/* Estilos para tabletas */
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+  .container {
+    max-width: 100%;
+    padding: 20px;
+  }
+}
+
+/* Estilos para pantallas de escritorio */
+@media only screen and (min-width: 769px) {
+
+}
